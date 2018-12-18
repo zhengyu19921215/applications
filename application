@@ -1,0 +1,892 @@
+预训练模型由来
+预训练模型是深度学习架构，已经过训练以执行大量数据上的特定任务（例如，识别图片中的分类问题）。这种训练不容易执行，并且通常需要大量资源，超出许多可用于深度学习模型的人可用的资源，我就没有大批次ＧＰＵ。在谈论预训练模型时，通常指的是在Imagenet上训练的CNN（用于视觉相关任务的架构）。ImageNet数据集包含超过1400万个图像，其中120万个图像分为1000个类别（大约100万个图像含边界框和注释）。
+预训练模型定义
+那么什么是预训练模型？这是在训练结束时结果比较好的一组权重值，研究人员分享出来供其他人使用。我们可以在github上找到许多具有权重的库，但是获取预训练模型的最简单方法可能是直接来自您选择的深度学习库。
+现在，上面是预训练模型的规范定义。您还可以找到预训练的模型来执行其他任务，例如物体检测或姿势估计。
+此外，最近研究人员已开始突破预训练模型的界限。在自然语言处理（使用文本的模型）的上下文中，我们已经有一段时间使用嵌入层。Word嵌入是一组数字的表示，其中的想法是类似的单词将以某种有用的方式表达。例如，我们可能希望'鹰派'，'鹰'，'蓝杰伊'的表现形式有一些相似之处，并且在其他方​​面也有所不同。用矢量表示单词的开创性论文是word2vec，这篇嵌入层的论文是我最喜欢的论文之一，最早源于80年代，Geoffrey Hinton 的论文。
+尽管通过对大型数据集进行训练获得的单词的表示非常有用（并且以与预训练模型类似的方式共享），但是将单词嵌入作为预训练模型会有点拉伸。然而，通过杰里米霍华德和塞巴斯蒂安鲁德的工作，真正的预训练模型已经到达NLP世界。它们往往非常强大，围绕着首先训练语言模型（在某种意义上理解某种语言中的文本而不仅仅是单词之间的相似性）的概念，并将其作为更高级任务的基础。有一种非常好的方法可以在大量数据上训练语言模型，而不需要对数据集进行人工注释。这意味着我们可以在尽可能多的数据上训练语言模型，比如整个维基百科！然后我们可以为特定任务（例如，情感分析）构建分类器并对模型进行微调，其中获取数据的成本更高。要了解有关这项非常有趣的工作的更多信息，请参阅论文虽然我建议先看看随附的网站，了解全局。
+预训练模型最好结果
+2018年NLP领域取得最重大突破！谷歌AI团队新发布的BERT模型，在机器阅读理解顶级水平测试SQuAD1.1中表现出惊人的成绩：全部两个衡量指标上全面超越人类，并且还在11种不同NLP测试中创出最佳成绩。毋庸置疑，BERT模型开启了NLP的新时代！而谷歌提出的BERT就是在OpenAI的GPT的基础上对预训练的目标进行了修改，并用更大的模型以及更多的数据去进行预训练，从而得到了目前为止最好的效果。
+旁注：如何从头开始训练架构以获得预训练的重量？这根本不容易回答，而且相关信息相当稀少。从纸张到纸张需要大量的跳跃才能将训练的所有方面（增强，训练 - 测试分裂，重量衰减，时间表等）拼凑在一起。我试着破解其中一些我过去做过的实验，你可以在这里或这里看看这些尝试。更有趣的是DAWNBench比赛网站。在这里，各个团队已经尝试将他们的神经网络训练到某种程度的准确性，同时提高资源使用效率和优化速度。这通常不是架构最初如何训练，而是一个非常有用的信息源（因为代码也可用）。
+预训练模型
+官方版本综合版本
+pytorch
+
+AlexNet
+VGG
+ResNet
+SqueezeNet
+DenseNet
+
+Inception v3
+ImageNet 表现如下：
+
+
+
+
+Network
+Top-1 error
+Top-5 error
+
+
+
+
+AlexNet
+43.45
+20.91
+
+
+VGG-11
+30.98
+11.37
+
+
+VGG-13
+30.07
+10.75
+
+
+VGG-16
+28.41
+9.62
+
+
+VGG-19
+27.62
+9.12
+
+
+VGG-11 with batch normalization
+29.62
+10.19
+
+
+VGG-13 with batch normalization
+28.45
+9.63
+
+
+VGG-16 with batch normalization
+26.63
+8.50
+
+
+VGG-19 with batch normalization
+25.76
+8.15
+
+
+ResNet-18
+30.24
+10.92
+
+
+ResNet-34
+26.70
+8.58
+
+
+ResNet-50
+23.85
+7.13
+
+
+ResNet-101
+22.63
+6.44
+
+
+ResNet-152
+21.69
+5.94
+
+
+SqueezeNet 1.0
+41.90
+19.58
+
+
+SqueezeNet 1.1
+41.81
+19.38
+
+
+Densenet-121
+25.35
+7.83
+
+
+Densenet-169
+24.00
+7.00
+
+
+Densenet-201
+22.80
+6.43
+
+
+Densenet-161
+22.35
+6.20
+
+
+Inception v3
+22.55
+6.44
+
+
+
+fastai
+tensorflow
+
+
+
+Model
+TF-Slim File
+Checkpoint
+Top-1 Accuracy
+Top-5 Accuracy
+
+
+
+
+Inception V1
+Code
+inception_v1_2016_08_28.tar.gz
+69.8
+89.6
+
+
+Inception V2
+Code
+inception_v2_2016_08_28.tar.gz
+73.9
+91.8
+
+
+Inception V3
+Code
+inception_v3_2016_08_28.tar.gz
+78.0
+93.9
+
+
+Inception V4
+Code
+inception_v4_2016_09_09.tar.gz
+80.2
+95.2
+
+
+Inception-ResNet-v2
+Code
+inception_resnet_v2_2016_08_30.tar.gz
+80.4
+95.3
+
+
+ResNet V1 50
+Code
+resnet_v1_50_2016_08_28.tar.gz
+75.2
+92.2
+
+
+ResNet V1 101
+Code
+resnet_v1_101_2016_08_28.tar.gz
+76.4
+92.9
+
+
+ResNet V1 152
+Code
+resnet_v1_152_2016_08_28.tar.gz
+76.8
+93.2
+
+
+
+ResNet V2 50^
+Code
+resnet_v2_50_2017_04_14.tar.gz
+75.6
+92.8
+
+
+
+ResNet V2 101^
+Code
+resnet_v2_101_2017_04_14.tar.gz
+77.0
+93.7
+
+
+
+ResNet V2 152^
+Code
+resnet_v2_152_2017_04_14.tar.gz
+77.8
+94.1
+
+
+ResNet V2 200
+Code
+TBA
+79.9*
+95.2*
+
+
+VGG 16
+Code
+vgg_16_2016_08_28.tar.gz
+71.5
+89.8
+
+
+VGG 19
+Code
+vgg_19_2016_08_28.tar.gz
+71.1
+89.8
+
+
+MobileNet_v1_1.0_224
+Code
+mobilenet_v1_1.0_224.tgz
+70.9
+89.9
+
+
+MobileNet_v1_0.50_160
+Code
+mobilenet_v1_0.50_160.tgz
+59.1
+81.9
+
+
+MobileNet_v1_0.25_128
+Code
+mobilenet_v1_0.25_128.tgz
+41.5
+66.3
+
+
+MobileNet_v2_1.4_224^*
+Code
+mobilenet_v2_1.4_224.tgz
+74.9
+92.5
+
+
+MobileNet_v2_1.0_224^*
+Code
+mobilenet_v2_1.0_224.tgz
+71.9
+91.0
+
+
+
+NASNet-A_Mobile_224#
+Code
+nasnet-a_mobile_04_10_2017.tar.gz
+74.0
+91.6
+
+
+
+NASNet-A_Large_331#
+Code
+nasnet-a_large_04_10_2017.tar.gz
+82.7
+96.2
+
+
+PNASNet-5_Large_331
+Code
+pnasnet-5_large_2017_12_13.tar.gz
+82.9
+96.2
+
+
+PNASNet-5_Mobile_224
+Code
+pnasnet-5_mobile_2017_12_13.tar.gz
+74.2
+91.9
+
+
+
+keras
+
+
+
+Model
+Size
+Top-1 Accuracy
+Top-5 Accuracy
+Parameters
+Depth
+
+
+
+
+Xception
+88 MB
+0.790
+0.945
+22,910,480
+126
+
+
+VGG16
+528 MB
+0.713
+0.901
+138,357,544
+23
+
+
+VGG19
+549 MB
+0.713
+0.900
+143,667,240
+26
+
+
+ResNet50
+99 MB
+0.749
+0.921
+25,636,712
+168
+
+
+InceptionV3
+92 MB
+0.779
+0.937
+23,851,784
+159
+
+
+InceptionResNetV2
+215 MB
+0.803
+0.953
+55,873,736
+572
+
+
+MobileNet
+16 MB
+0.704
+0.895
+4,253,864
+88
+
+
+MobileNetV2
+14 MB
+0.713
+0.901
+3,538,984
+88
+
+
+DenseNet121
+33 MB
+0.750
+0.923
+8,062,504
+121
+
+
+DenseNet169
+57 MB
+0.762
+0.932
+14,307,880
+169
+
+
+DenseNet201
+80 MB
+0.773
+0.936
+20,242,984
+201
+
+
+NASNetMobile
+23 MB
+0.744
+0.919
+5,326,716
+-
+
+
+NASNetLarge
+343 MB
+0.825
+0.960
+88,949,818
+-
+
+
+
+ONNX
+图片分类
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+MobileNet
+Sandler et al.
+Efficient CNN model for mobile and embedded vision applications. Top-5 error from paper - ~10%
+
+
+ResNet
+
+He et al., He et al.
+
+Very deep CNN model (up to 152 layers), won the ImageNet Challenge in 2015. Top-5 error from  paper - ~6%
+
+
+SqueezeNet
+Iandola et al.
+A light-weight CNN providing Alexnet level accuracy with 50X fewer parameters. Top-5 error from  paper - ~20%
+
+
+VGG
+Simonyan et al.
+Deep CNN model (upto 19 layers) which won the ImageNet Challenge in 2014. Top-5 error from  paper - ~8%
+
+
+Bvlc_AlexNet
+Krizhevsky et al.
+Deep CNN model for Image Classification
+
+
+Bvlc_GoogleNet
+Szegedy et al.
+Deep CNN model for Image Classification
+
+
+Bvlc_reference_CaffeNet
+Krizhevsky et al.
+Deep CNN model for Image Classification
+
+
+Bvlc_reference_RCNN_ILSVRC13
+Girshick et al.
+Deep CNN model for Image Classification
+
+
+DenseNet121
+Huang et al.
+Deep CNN model for Image Classification
+
+
+Inception_v1
+Szegedy et al.
+Deep CNN model for Image Classification
+
+
+Inception_v2
+Szegedy et al.
+Deep CNN model for Image Classification
+
+
+ShuffleNet
+Zhang et al.
+Deep CNN model for Image Classification
+
+
+ZFNet512
+Zeiler et al.
+Deep CNN model for Image Classification
+
+
+
+语义分割
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+DUC
+Wang et al.
+Deep CNN based model with >80% mIOU (mean Intersection Over Union) trained on urban street images
+
+
+FCN
+Long et al.
+contribute
+
+
+
+对象检测和分段
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+Tiny_YOLOv2
+Redmon et al.
+Deep CNN model for Object Detection
+
+
+<b>SSD</b>
+Liu et al.
+contribute
+
+
+Faster-RCNN
+Ren et al.
+contribute
+
+
+Mask-RCNN
+He et al.
+contribute
+
+
+YOLO v2
+Redmon et al.
+contribute
+
+
+YOLO v3
+Redmon et al.
+contribute
+
+
+
+面部检测和识别
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+ArcFace
+Deng et al.
+ArcFace is a CNN based model for face recognition which learns discriminative features of faces and produces embeddings for input face images.
+
+
+CNN Cascade
+Li et al.
+contribute
+
+
+
+表情识别
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+Emotion FerPlus
+Barsoum et al.
+Deep CNN model for Emotion recognition
+
+
+
+
+性别区别
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+Age and Gender Classification using Convolutional Neural Networks
+Levi et al.
+contribute
+
+
+
+
+手写数字识别
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+MNIST- Hand Written Digit Recognition
+Convolutional Neural Network with MNIST
+Deep CNN model for hand written digit identification
+
+
+
+
+超分辨率
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+Image Super resolution using deep convolutional networks
+Dong et al.
+contribute
+
+
+
+
+风格迁移
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+Unpaired Image to Image Translation using Cycle consistent Adversarial Network
+Zhu et al.
+contribute
+
+
+
+
+机器翻译
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+Neural Machine Translation by jointly learning to align and translate
+Bahdanau et al.
+contribute
+
+
+Google's Neural Machine Translation System
+Wu et al.
+contribute
+
+
+
+
+语音处理
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+Speech recognition with deep recurrent neural networks
+Graves et al.
+contribute
+
+
+Deep voice: Real time neural text to speech
+Arik et al.
+contribute
+
+
+
+语言模型
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+Deep Neural Network Language Models
+Arisoy et al.
+contribute
+
+
+
+
+视觉问答
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+VQA: Visual Question Answering
+Agrawal et al.
+contribute
+
+
+Yin and Yang: Balancing and Answering Binary Visual Questions
+Zhang et al.
+contribute
+
+
+Making the V in VQA Matter
+Goyal et al.
+contribute
+
+
+Visual Dialog
+Das et al.
+contribute
+
+
+
+其他有意思的模型
+
+
+
+Model Class
+Reference
+Description
+
+
+
+
+Text to Image
+Generative Adversarial Text to image Synthesis 
+contribute
+
+
+Sound Generative models
+WaveNet: A Generative Model for Raw Audio 
+contribute
+
+
+Time Series Forecasting
+Modeling Long- and Short-Term Temporal Patterns with Deep Neural Networks 
+contribute
+
+
+Recommender systems
+DropoutNet: Addressing Cold Start in Recommender Systems
+contribute
+
+
+Collaborative filtering
+
+contribute
+
+
+Autoencoders
+
+contribute
+
+
+
+Model Visualization
+You can see visualizations of each model's network architecture by using Netron.
+CV
+
+
+
+名称
+环境
+精度
+错误率
+
+
+
+
+物体检测
+c cuda
+
+
+
+
+姿势估计
+keras
+
+
+
+
+斯坦福CIFAR10
+pytorch tensorflow
+95.29%
+
+
+
+斯坦福ImageNet
+pytorch tensorflow MXNet caffe
+93.94%
+
+
+
+
+NLP
+FairSeq Seq2Seq模型
+
+
+wmt14.en-fr.fconv-cuda.tar.bz2:　预训练模型 WMT14 English-French 包含字典
+
+wmt14.en-fr.fconv-float.tar.bz2: 预训练模型 [WMT14 English-French]CPU版本
+
+wmt14.en-de.fconv-cuda.tar.bz2: 预训练模型 WMT14 English-German 包含字典
+
+wmt14.en-de.fconv-float.tar.bz2: 预训练模型 WMT14 English-German CPU 版本
+
+wmt16.en-ro.fconv-cuda.tar.bz2: 预训练模型WMT16 English-Romanian 包含字典
+
+wmt16.en-ro.fconv-float.tar.bz2: 预训练模型WMT16 English-Romanian CPU版本
+
+
+斯坦福SQuAD
+斯坦福GloVe
+Google BERT
+Word2Vec
